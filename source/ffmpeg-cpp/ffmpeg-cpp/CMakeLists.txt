@@ -6,12 +6,17 @@
 include_directories(.)
 
 #---------------------------------------------------------------------------------------------------
+file(GLOB all_files
+     "*.cpp"
+     "Codecs/*.cpp"
+     "Demuxing/*.cpp"
+     "Frame Sinks/*.cpp"
+     "Info/*.cpp"
+     "Muxing/*.cpp"
+     "Sources/*.cpp"
+     "codecs/*.cpp"
+)
 
 add_library(decomp_storage
-    AudioFormatConverter.cpp
-    FFmpegException.cpp
-    OpenCodec.cpp
-    CodecDeducer.cpp
-    FrameContainer.cpp
-    VideoFormatConverter.cpp
+    ${all_files}
 )
