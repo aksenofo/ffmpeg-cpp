@@ -4,19 +4,18 @@
 namespace ffmpegcpp
 {
 
-	class VP9Codec : public VideoCodec
-	{
+class VP9Codec : public VideoCodec
+{
 
-	public:
+public:
+    VP9Codec();
 
-		VP9Codec();
+    void SetDeadline(const char* deadline);
+    void SetCpuUsed(int cpuUsed);
 
-		void SetDeadline(const char* deadline);
-		void SetCpuUsed(int cpuUsed);
-
-		void SetLossless(bool lossless);
-		void SetCrf(int crf);
-	};
+    void SetLossless(bool lossless);
+    void SetCrf(int crf);
+};
 
 
-}
+} // namespace ffmpegcpp

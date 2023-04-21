@@ -1,52 +1,51 @@
 #pragma once
 
-#include "ffmpeg.h"
 #include "Frame Sinks/FrameSink.h"
 #include "InputSource.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	// EncodedFileSource takes a file that is already encoded but not in a container (ie .mp3, .h264)
-	// and feeds it to the system.
-	class EncodedFileSource : public InputSource
-	{
+// EncodedFileSource takes a file that is already encoded but not in a container (ie .mp3, .h264)
+// and feeds it to the system.
+class EncodedFileSource : public InputSource
+{
 
-	public:
-		EncodedFileSource(const char* inFileName, AVCodecID codecId, FrameSink* output);
-		EncodedFileSource(const char* inFileName, const char* codecName, FrameSink* output);
-		virtual ~EncodedFileSource();
+public:
+    EncodedFileSource(const char* inFileName, AVCodecID codecId, FrameSink* output);
+    EncodedFileSource(const char* inFileName, const char* codecName, FrameSink* output);
+    virtual ~EncodedFileSource();
 
-		virtual void PreparePipeline();
-		virtual bool IsDone();
-		virtual void Step();
+    virtual void PreparePipeline();
+    virtual bool IsDone();
+    virtual void Step();
 
-	private:
+private:
+    void CleanUp();
 
-		void CleanUp();
+    bool done = false;
 
-		bool done = false;
+    FrameSinkStream* output;
 
-		FrameSinkStream* output;
-		
-		AVCodecParserContext* parser = nullptr;
+    AVCodecParserContext* parser = nullptr;
 
-		AVCodec* codec;
-		AVCodecContext* codecContext = nullptr;
+    AVCodec* codec;
+    AVCodecContext* codecContext = nullptr;
 
-		int bufferSize;
+    int bufferSize;
 
-		AVFrame* decoded_frame = nullptr;
-		AVPacket* pkt = nullptr;
-		uint8_t* buffer = nullptr;
+    AVFrame* decoded_frame = nullptr;
+    AVPacket* pkt = nullptr;
+    uint8_t* buffer = nullptr;
 
-		FILE* file;
+    FILE* file;
 
-		void Init(const char* inFileName, AVCodec* codec, FrameSink* output);
+    void Init(const char* inFileName, AVCodec* codec, FrameSink* output);
 
-		void Decode(AVPacket *packet, AVFrame* targetFrame);
+    void Decode(AVPacket* packet, AVFrame* targetFrame);
 
-		AVRational timeBaseCorrectedByTicksPerFrame;
+    AVRational timeBaseCorrectedByTicksPerFrame;
 
-		StreamData* metaData = nullptr;
-	};
-}
+    StreamData* metaData = nullptr;
+};
+} // namespace ffmpegcpp

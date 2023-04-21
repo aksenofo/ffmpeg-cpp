@@ -4,11 +4,10 @@
 
 namespace ffmpegcpp
 {
-	struct StreamData
-	{
-		AVMediaType type;
+struct StreamData {
+    AVMediaType type;
 
-		AVRational timeBase;
-		AVRational frameRate;
-	};
-}
+    AVRational timeBase;
+    AVRational frameRate;
+};
+} // namespace ffmpegcpp

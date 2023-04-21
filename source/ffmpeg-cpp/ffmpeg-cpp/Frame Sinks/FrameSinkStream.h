@@ -1,26 +1,24 @@
 #pragma once
 
-#include "ffmpeg.h"
-#include "FrameWriter.h"
 #include "Demuxing/StreamData.h"
+#include "FrameWriter.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	class FrameSinkStream
-	{
-	public:
+class FrameSinkStream
+{
+public:
+    FrameSinkStream(FrameWriter* frameSink, int streamIdx);
 
-		FrameSinkStream(FrameWriter* frameSink, int streamIdx);
+    void WriteFrame(AVFrame* frame, StreamData* metaData);
 
-		void WriteFrame(AVFrame* frame, StreamData* metaData);
+    void Close();
 
-		void Close();
+    bool IsPrimed();
 
-		bool IsPrimed();
-
-	private:
-
-		FrameWriter* frameSink;
-		int streamIndex;
-	};
-}
+private:
+    FrameWriter* frameSink;
+    int streamIndex;
+};
+} // namespace ffmpegcpp

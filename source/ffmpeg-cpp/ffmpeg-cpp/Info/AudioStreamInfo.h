@@ -4,18 +4,16 @@
 
 namespace ffmpegcpp
 {
-	struct AudioStreamInfo
-	{
-		int id;
-		AVRational timeBase;
-		const AVCodec* codec;
-		float bitRate;
+struct AudioStreamInfo {
+    int id;
+    AVRational timeBase;
+    const AVCodec* codec;
+    float bitRate;
 
-		int sampleRate;
-		int channels;
+    int sampleRate;
+    int channels;
 
-		uint64_t channelLayout;
-		char channelLayoutName[255];
-
-	};
-}
+    uint64_t channelLayout;
+    char channelLayoutName[255];
+};
+} // namespace ffmpegcpp

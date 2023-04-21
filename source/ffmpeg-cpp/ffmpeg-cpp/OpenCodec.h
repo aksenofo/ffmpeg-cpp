@@ -4,19 +4,17 @@
 
 namespace ffmpegcpp
 {
-	class OpenCodec
-	{
-	public:
+class OpenCodec
+{
+public:
+    OpenCodec(AVCodecContext* openCodecContext);
+    ~OpenCodec();
 
-		OpenCodec(AVCodecContext* openCodecContext);
-		~OpenCodec();
+    AVCodecContext* GetContext();
 
-		AVCodecContext* GetContext();
-
-	private:
-
-		AVCodecContext* context;
-	};
+private:
+    AVCodecContext* context;
+};
 
 
-}
+} // namespace ffmpegcpp

@@ -1,41 +1,39 @@
 #pragma once
 
-#include "ffmpeg.h"
 #include "Frame Sinks/VideoFrameSink.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	// RawVideoDataSource is used to feed raw memory to the system and process it.
-	// You can use this if the video data comes from another source than the file system (ie rendering).
-	class RawVideoDataSource
-	{
+// RawVideoDataSource is used to feed raw memory to the system and process it.
+// You can use this if the video data comes from another source than the file system (ie rendering).
+class RawVideoDataSource
+{
 
-	public:
+public:
+    RawVideoDataSource(int width, int height, AVPixelFormat pixelFormat, int framesPerSecond, FrameSink* output);
+    RawVideoDataSource(int width, int height, AVPixelFormat sourcePixelFormat, AVPixelFormat targetPixelFormat, int framesPerSecond, FrameSink* output);
+    virtual ~RawVideoDataSource();
 
-		RawVideoDataSource(int width, int height, AVPixelFormat pixelFormat, int framesPerSecond, FrameSink* output);
-		RawVideoDataSource(int width, int height, AVPixelFormat sourcePixelFormat, AVPixelFormat targetPixelFormat, int framesPerSecond, FrameSink* output);
-		virtual ~RawVideoDataSource();
+    void WriteFrame(void* data, int bytesPerRow);
+    void Close();
 
-		void WriteFrame(void* data, int bytesPerRow);
-		void Close();
+    int GetWidth();
+    int GetHeight();
 
-		int GetWidth();
-		int GetHeight();
+    bool IsPrimed();
 
-		bool IsPrimed();
+private:
+    void Init(int width, int height, AVPixelFormat sourcePixelFormat, AVPixelFormat targetPixelFormat, int framesPerSecond, FrameSink* output);
+    void CleanUp();
 
-	private:
+    AVPixelFormat sourcePixelFormat;
 
-		void Init(int width, int height, AVPixelFormat sourcePixelFormat, AVPixelFormat targetPixelFormat, int framesPerSecond, FrameSink* output);
-		void CleanUp();
+    FrameSinkStream* output;
 
-		AVPixelFormat sourcePixelFormat;
+    StreamData metaData;
 
-		FrameSinkStream* output;
-
-		StreamData metaData;
-
-		AVFrame* frame = nullptr;
-		struct SwsContext* swsContext = nullptr;
-	};
-}
+    AVFrame* frame = nullptr;
+    struct SwsContext* swsContext = nullptr;
+};
+} // namespace ffmpegcpp

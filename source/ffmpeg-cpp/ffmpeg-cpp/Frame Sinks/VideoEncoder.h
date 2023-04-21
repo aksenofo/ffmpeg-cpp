@@ -1,53 +1,50 @@
 #pragma once
 
-#include "ffmpeg.h"
-
-#include "Frame Sinks/VideoFrameSink.h"
 #include "Codecs/VideoCodec.h"
-#include "VideoFormatConverter.h"
+#include "Frame Sinks/VideoFrameSink.h"
 #include "Muxing/Muxer.h"
 #include "OneInputFrameSink.h"
+#include "VideoFormatConverter.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	class VideoEncoder : public VideoFrameSink, public FrameWriter
-	{
-	public:
-		VideoEncoder(VideoCodec* codec, Muxer* muxer);
-		VideoEncoder(VideoCodec* codec, Muxer* muxer, AVPixelFormat format);
-		VideoEncoder(VideoCodec* codec, Muxer* muxer, AVRational frameRate);
-		VideoEncoder(VideoCodec* codec, Muxer* muxer, AVRational frameRate, AVPixelFormat format);
-		virtual ~VideoEncoder();
+class VideoEncoder : public VideoFrameSink, public FrameWriter
+{
+public:
+    VideoEncoder(VideoCodec* codec, Muxer* muxer);
+    VideoEncoder(VideoCodec* codec, Muxer* muxer, AVPixelFormat format);
+    VideoEncoder(VideoCodec* codec, Muxer* muxer, AVRational frameRate);
+    VideoEncoder(VideoCodec* codec, Muxer* muxer, AVRational frameRate, AVPixelFormat format);
+    virtual ~VideoEncoder();
 
-		FrameSinkStream* CreateStream();
+    FrameSinkStream* CreateStream();
 
-		void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
-		void Close(int streamIndex);
+    void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
+    void Close(int streamIndex);
 
-		bool IsPrimed();
+    bool IsPrimed();
 
-	private:
+private:
+    void OpenLazily(AVFrame* frame, StreamData* metaData);
+    void PollCodecForPackets();
 
-		void OpenLazily(AVFrame* frame, StreamData* metaData);
-		void PollCodecForPackets();
+    VideoCodec* closedCodec;
+    OutputStream* output;
 
-		VideoCodec* closedCodec;
-		OutputStream* output;
+    VideoFormatConverter* formatConverter = nullptr;
+    OpenCodec* codec = nullptr;
+    AVPacket* pkt = nullptr;
 
-		VideoFormatConverter* formatConverter = nullptr;
-		OpenCodec* codec = nullptr;
-		AVPacket* pkt = nullptr;
+    OneInputFrameSink* oneInputFrameSink = nullptr;
 
-		OneInputFrameSink* oneInputFrameSink = nullptr;
+    int frameNumber = 0;
 
-		int frameNumber = 0;
+    void CleanUp();
 
-		void CleanUp();
+    AVPixelFormat finalPixelFormat = AV_PIX_FMT_NONE;
 
-		AVPixelFormat finalPixelFormat = AV_PIX_FMT_NONE;
-
-		AVRational finalFrameRate;
-		bool finalFrameRateSet = false;
-	};
-}
-
+    AVRational finalFrameRate;
+    bool finalFrameRateSet = false;
+};
+} // namespace ffmpegcpp

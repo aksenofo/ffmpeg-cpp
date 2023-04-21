@@ -4,44 +4,43 @@
 #include "std.h"
 
 
-namespace ffmpegcpp {
+namespace ffmpegcpp
+{
 
-	class OutputStream;
+class OutputStream;
 
-	class Muxer
-	{
-	public:
+class Muxer
+{
+public:
+    Muxer(const char* fileName);
+    ~Muxer();
 
-		Muxer(const char* fileName);
-		~Muxer();
+    void AddOutputStream(OutputStream* stream);
 
-		void AddOutputStream(OutputStream* stream);
+    void WritePacket(AVPacket* pkt);
 
-		void WritePacket(AVPacket* pkt);
+    void Close();
 
-		void Close();
-		
-		bool IsPrimed();
+    bool IsPrimed();
 
-		AVCodec* GetDefaultVideoFormat();
-		AVCodec* GetDefaultAudioFormat();
+    AVCodec* GetDefaultVideoFormat();
+    AVCodec* GetDefaultAudioFormat();
 
 
-	private:
+private:
+    void Open();
 
-		void Open();
-		
-		std::vector<OutputStream*> outputStreams;
-		std::vector<AVPacket*> packetQueue;
+    std::vector<OutputStream*> outputStreams;
+    std::vector<AVPacket*> packetQueue;
 
-		AVOutputFormat* containerFormat;
+    AVOutputFormat* containerFormat;
 
-		AVFormatContext* containerContext = nullptr;
+    AVFormatContext* containerContext = nullptr;
 
-		std::string fileName;
+    std::string fileName;
 
-		void CleanUp();
+    void CleanUp();
 
-		bool opened = false;
-	};
-}
+    bool opened = false;
+};
+} // namespace ffmpegcpp

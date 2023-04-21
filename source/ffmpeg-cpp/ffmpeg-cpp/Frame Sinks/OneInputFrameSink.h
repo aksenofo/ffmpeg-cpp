@@ -1,34 +1,30 @@
 #pragma once
 
-#include "ffmpeg.h"
-
-#include "FrameWriter.h"
 #include "FrameSink.h"
+#include "FrameWriter.h"
+#include "ffmpeg.h"
 
 
 namespace ffmpegcpp
 {
-	class OneInputFrameSink : public FrameSink
-	{
-	public:
+class OneInputFrameSink : public FrameSink
+{
+public:
+    OneInputFrameSink(FrameWriter* writer, AVMediaType mediaType);
+    ~OneInputFrameSink();
 
-		OneInputFrameSink(FrameWriter* writer, AVMediaType mediaType);
-		~OneInputFrameSink();
+    virtual AVMediaType GetMediaType();
 
-		virtual AVMediaType GetMediaType();
-
-		FrameSinkStream* CreateStream();
+    FrameSinkStream* CreateStream();
 
 
-	private:
+private:
+    int nStreamsGenerated = 0;
 
-		int nStreamsGenerated = 0;
+    FrameWriter* writer;
 
-		FrameWriter* writer;
+    FrameSinkStream* stream = nullptr;
 
-		FrameSinkStream* stream = nullptr;
-
-		AVMediaType mediaType;
-	};
-}
-
+    AVMediaType mediaType;
+};
+} // namespace ffmpegcpp

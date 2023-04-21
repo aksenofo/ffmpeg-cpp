@@ -1,49 +1,46 @@
 #pragma once
 
-#include "ffmpeg.h"
 #include "ConvertedAudioProcessor.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	class AudioFormatConverter
-	{
-	public:
+class AudioFormatConverter
+{
+public:
+    AudioFormatConverter(ConvertedAudioProcessor* output, AVCodecContext* codecContext);
+    ~AudioFormatConverter();
 
-		AudioFormatConverter(ConvertedAudioProcessor* output, AVCodecContext* codecContext);
-		~AudioFormatConverter();
-
-		void ProcessFrame(AVFrame* frame);
-
+    void ProcessFrame(AVFrame* frame);
 
 
-	private:
+private:
+    void CleanUp();
 
-		void CleanUp();
+    void InitDelayed(AVFrame* frame);
 
-		void InitDelayed(AVFrame* frame);
+    void AddToFifo(AVFrame* frame);
+    void PullConvertedFrameFromFifo();
 
-		void AddToFifo(AVFrame* frame);
-		void PullConvertedFrameFromFifo();
+    void WriteCompleteConvertedFrame();
 
-		void WriteCompleteConvertedFrame();
+    ConvertedAudioProcessor* output;
 
-		ConvertedAudioProcessor* output;
+    AVCodecContext* codecContext;
 
-		AVCodecContext* codecContext;
-		
-		bool initialized = false;
+    bool initialized = false;
 
-		AVAudioFifo* fifo = nullptr;
-		AVFrame* tmp_frame = nullptr;
-		AVFrame* converted_frame = nullptr;
-		struct SwrContext* swr_ctx = nullptr;
+    AVAudioFifo* fifo = nullptr;
+    AVFrame* tmp_frame = nullptr;
+    AVFrame* converted_frame = nullptr;
+    struct SwrContext* swr_ctx = nullptr;
 
-		int in_sample_rate, out_sample_rate;
+    int in_sample_rate, out_sample_rate;
 
-		int samples_count = 0;
+    int samples_count = 0;
 
-		int samplesInCurrentFrame = 0;
-	};
+    int samplesInCurrentFrame = 0;
+};
 
 
-}
+} // namespace ffmpegcpp

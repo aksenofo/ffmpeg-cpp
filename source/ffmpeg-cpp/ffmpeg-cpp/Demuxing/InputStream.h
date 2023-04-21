@@ -1,60 +1,56 @@
 #pragma once
 
-#include "ffmpeg.h"
-#include "std.h"
+#include "Demuxing/StreamData.h"
 #include "Frame Sinks/FrameSink.h"
 #include "Info/ContainerInfo.h"
-#include "Demuxing/StreamData.h"
+#include "ffmpeg.h"
+#include "std.h"
 
 namespace ffmpegcpp
 {
-	class InputStream
-	{
+class InputStream
+{
 
-	public:
+public:
+    InputStream(AVFormatContext* format, AVStream* stream);
+    virtual ~InputStream();
 
-		InputStream(AVFormatContext* format, AVStream* stream);
-		virtual ~InputStream();
+    void Open(FrameSink* frameSink);
 
-		void Open(FrameSink* frameSink);
+    virtual void DecodePacket(AVPacket* pkt);
+    void Close();
 
-		virtual void DecodePacket(AVPacket* pkt);
-		void Close();
+    bool IsPrimed();
+    int GetFramesProcessed();
 
-		bool IsPrimed();
-		int GetFramesProcessed();
+    virtual void AddStreamInfo(ContainerInfo* info) = 0;
 
-		virtual void AddStreamInfo(ContainerInfo* info) = 0;
-
-	protected:
-
-		AVCodecContext* codecContext = nullptr;
+protected:
+    AVCodecContext* codecContext = nullptr;
 
 
-		virtual void ConfigureCodecContext();
+    virtual void ConfigureCodecContext();
 
-		AVFormatContext* format;
-		AVStream* stream;
+    AVFormatContext* format;
+    AVStream* stream;
 
-		float CalculateBitRate(AVCodecContext* ctx);
+    float CalculateBitRate(AVCodecContext* ctx);
 
-	private:
+private:
+    AVRational timeBaseCorrectedByTicksPerFrame;
 
-		AVRational timeBaseCorrectedByTicksPerFrame;
+    FrameSinkStream* output = nullptr;
 
-		FrameSinkStream* output = nullptr;
+    AVFrame* frame;
 
-		AVFrame* frame;
+    StreamData* metaData = nullptr;
 
-		StreamData* metaData = nullptr;
+    StreamData* DiscoverMetaData();
 
-		StreamData* DiscoverMetaData();
+    int nFramesProcessed = 0;
 
-		int nFramesProcessed = 0;
-		
-		void CleanUp();
-
-	};
+    void CleanUp();
+};
 
 
-}
+} // namespace ffmpegcpp

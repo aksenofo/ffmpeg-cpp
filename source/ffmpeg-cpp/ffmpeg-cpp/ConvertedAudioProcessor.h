@@ -4,12 +4,10 @@
 
 namespace ffmpegcpp
 {
-	class ConvertedAudioProcessor
-	{
-	public:
+class ConvertedAudioProcessor
+{
+public:
+    virtual void WriteConvertedFrame(AVFrame* convertedFrame) = 0;
+};
 
-		virtual void WriteConvertedFrame(AVFrame* convertedFrame) = 0;
-	};
-
-}
-
+} // namespace ffmpegcpp

@@ -1,58 +1,55 @@
 #pragma once
 
+#include "VideoFilterInput.h"
+#include "VideoFrameSink.h"
 #include "ffmpeg.h"
 #include "std.h"
 
-#include "VideoFrameSink.h"
-#include "VideoFilterInput.h"
-
 namespace ffmpegcpp
 {
-	class Filter : public FrameSink, public FrameWriter
-	{
+class Filter : public FrameSink, public FrameWriter
+{
 
-	public:
+public:
+    Filter(const char* filterString, FrameSink* target);
+    virtual ~Filter();
 
-		Filter(const char* filterString, FrameSink* target);
-		virtual ~Filter();
+    FrameSinkStream* CreateStream();
 
-		FrameSinkStream* CreateStream();
+    void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
+    void Close(int streamIndex);
 
-		void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
-		void Close(int streamIndex);
+    bool IsPrimed();
 
-		bool IsPrimed();
+    virtual AVMediaType GetMediaType();
 
-		virtual AVMediaType GetMediaType();
+private:
+    void CleanUp();
 
-	private:
+    void ConfigureFilterGraph();
+    void DrainInputQueues();
+    void PollFilterGraphForFrames();
+    void FillArguments(char* args, int argsLength, AVFrame* frame, StreamData* metaData);
 
-		void CleanUp();
+    const char* GetBufferName(AVMediaType mediaType);
+    const char* GetBufferSinkName(AVMediaType mediaType);
 
-		void ConfigureFilterGraph();
-		void DrainInputQueues();
-		void PollFilterGraphForFrames();
-		void FillArguments(char* args, int argsLength, AVFrame* frame, StreamData* metaData);
+    std::vector<VideoFilterInput*> inputs;
+    std::vector<AVFilterContext*> bufferSources;
 
-		const char* GetBufferName(AVMediaType mediaType);
-		const char* GetBufferSinkName(AVMediaType mediaType);
+    AVMediaType targetMediaType;
+    FrameSinkStream* target;
 
-		std::vector<VideoFilterInput*> inputs;
-		std::vector<AVFilterContext*> bufferSources;
+    const char* filterString;
 
-		AVMediaType targetMediaType;
-		FrameSinkStream* target;
+    AVFilterGraph* filter_graph = nullptr;
+    AVFilterContext* buffersink_ctx = nullptr;
+    AVFrame* filt_frame = nullptr;
 
-		const char* filterString;
+    bool initialized = false;
 
-		AVFilterGraph *filter_graph = nullptr;
-		AVFilterContext *buffersink_ctx = nullptr;
-		AVFrame* filt_frame = nullptr;
-
-		bool initialized = false;
-
-		StreamData outputMetaData;
-	};
+    StreamData outputMetaData;
+};
 
 
-}
+} // namespace ffmpegcpp

@@ -1,36 +1,33 @@
 #pragma once
 
-#include "ffmpeg.h"
 #include "Codecs/Codec.h"
-#include "OutputStream.h"
 #include "Muxer.h"
+#include "OutputStream.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	class VideoOutputStream : public OutputStream
-	{
-	public:
+class VideoOutputStream : public OutputStream
+{
+public:
+    VideoOutputStream(Muxer* muxer, Codec* codec);
 
-		VideoOutputStream(Muxer* muxer, Codec* codec);
+    virtual void OpenStream(AVStream* stream, int containerFlags);
 
-		virtual void OpenStream(AVStream* stream, int containerFlags);
+    virtual void WritePacket(AVPacket* pkt, OpenCodec* openCodec);
 
-		virtual void WritePacket(AVPacket* pkt, OpenCodec* openCodec);
+    virtual bool IsPrimed();
 
-		virtual bool IsPrimed();
+protected:
+    virtual void PreparePacketForMuxer(AVPacket* pkt);
 
-	protected:
+private:
+    void LazilyInitialize(OpenCodec* openCodec);
 
-		virtual void PreparePacketForMuxer(AVPacket* pkt);
+    AVStream* stream;
 
-	private:
+    bool initialized = false;
 
-		void LazilyInitialize(OpenCodec* openCodec);
-
-		AVStream* stream;
-
-		bool initialized = false;
-
-		AVRational codecTimeBase;
-	};
-}
+    AVRational codecTimeBase;
+};
+} // namespace ffmpegcpp

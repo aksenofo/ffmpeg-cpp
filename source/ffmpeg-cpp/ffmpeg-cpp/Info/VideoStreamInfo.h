@@ -4,17 +4,16 @@
 
 namespace ffmpegcpp
 {
-	struct VideoStreamInfo
-	{
-		int id;
-		AVRational frameRate;
-		AVRational timeBase;
-		const AVCodec* codec;
-		float bitRate;
+struct VideoStreamInfo {
+    int id;
+    AVRational frameRate;
+    AVRational timeBase;
+    const AVCodec* codec;
+    float bitRate;
 
-		AVPixelFormat format;
-		const char* formatName;
+    AVPixelFormat format;
+    const char* formatName;
 
-		int width, height;
-	};
-}
+    int width, height;
+};
+} // namespace ffmpegcpp

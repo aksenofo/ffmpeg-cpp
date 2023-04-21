@@ -1,54 +1,51 @@
 #pragma once
 
-#include "ffmpeg.h"
-#include "std.h"
-
-#include "Frame Sinks/AudioFrameSink.h"
+#include "AudioFormatConverter.h"
 #include "Codecs/AudioCodec.h"
 #include "ConvertedAudioProcessor.h"
-#include "AudioFormatConverter.h"
+#include "Frame Sinks/AudioFrameSink.h"
 #include "Muxing/Muxer.h"
 #include "Muxing/OutputStream.h"
 #include "OneInputFrameSink.h"
+#include "ffmpeg.h"
+#include "std.h"
 
 namespace ffmpegcpp
 {
-	class AudioEncoder : public AudioFrameSink, public ConvertedAudioProcessor, public FrameWriter
-	{
-	public:
-		AudioEncoder(AudioCodec* codec, Muxer* muxer);
-		AudioEncoder(AudioCodec* codec, Muxer* muxer, int bitRate);
-		virtual ~AudioEncoder();
+class AudioEncoder : public AudioFrameSink, public ConvertedAudioProcessor, public FrameWriter
+{
+public:
+    AudioEncoder(AudioCodec* codec, Muxer* muxer);
+    AudioEncoder(AudioCodec* codec, Muxer* muxer, int bitRate);
+    virtual ~AudioEncoder();
 
-		FrameSinkStream* CreateStream();
-		void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
-		void Close(int streamIndex);
+    FrameSinkStream* CreateStream();
+    void WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData);
+    void Close(int streamIndex);
 
-		virtual void WriteConvertedFrame(AVFrame* frame);
+    virtual void WriteConvertedFrame(AVFrame* frame);
 
-		bool IsPrimed();
+    bool IsPrimed();
 
-	private:
+private:
+    void OpenLazily(AVFrame* frame, StreamData* metaData);
 
-		void OpenLazily(AVFrame* frame, StreamData* metaData);
+    void CleanUp();
 
-		void CleanUp();
+    void PollCodecForPackets();
 
-		void PollCodecForPackets();
+    OutputStream* output;
 
-		OutputStream* output;
+    AudioCodec* closedCodec;
 
-		AudioCodec* closedCodec;
+    AudioFormatConverter* formatConverter = nullptr;
+    OpenCodec* codec = nullptr;
+    AVPacket* pkt = nullptr;
 
-		AudioFormatConverter *formatConverter = nullptr;
-		OpenCodec* codec = nullptr;
-		AVPacket* pkt = nullptr;
+    OneInputFrameSink* oneInputFrameSink = nullptr;
 
-		OneInputFrameSink* oneInputFrameSink = nullptr;
+    int frameNumber = 0;
 
-		int frameNumber = 0;
-
-		int finalBitRate = -1;
-	};
-}
-
+    int finalBitRate = -1;
+};
+} // namespace ffmpegcpp

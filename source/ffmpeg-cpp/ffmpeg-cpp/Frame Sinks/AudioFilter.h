@@ -2,7 +2,6 @@
 class AudioFilter
 {
 public:
-	AudioFilter();
-	~AudioFilter();
+    AudioFilter();
+    ~AudioFilter();
 };
-

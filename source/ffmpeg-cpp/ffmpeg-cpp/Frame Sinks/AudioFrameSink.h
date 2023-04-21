@@ -4,15 +4,14 @@
 
 namespace ffmpegcpp
 {
-	class AudioFrameSink : public FrameSink
-	{
-	public:
+class AudioFrameSink : public FrameSink
+{
+public:
+    virtual AVMediaType GetMediaType()
+    {
+        return AVMEDIA_TYPE_AUDIO;
+    }
 
-		virtual AVMediaType GetMediaType()
-		{
-			return AVMEDIA_TYPE_AUDIO;
-		}
-
-		virtual ~AudioFrameSink() {}
-	};
-}
+    virtual ~AudioFrameSink() {}
+};
+} // namespace ffmpegcpp

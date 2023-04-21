@@ -1,23 +1,21 @@
 #pragma once
 
-#include "ffmpeg.h"
-#include "InputStream.h"
 #include "Frame Sinks/AudioFrameSink.h"
+#include "InputStream.h"
+#include "ffmpeg.h"
 
 namespace ffmpegcpp
 {
-	class AudioInputStream : public InputStream
-	{
+class AudioInputStream : public InputStream
+{
 
-	public:
+public:
+    AudioInputStream(AVFormatContext* format, AVStream* stream);
+    ~AudioInputStream();
 
-		AudioInputStream(AVFormatContext* format, AVStream* stream);
-		~AudioInputStream();
+    void AddStreamInfo(ContainerInfo* info);
 
-		void AddStreamInfo(ContainerInfo* info);
-
-	protected:
-
-		virtual void ConfigureCodecContext();
-	};
-}
+protected:
+    virtual void ConfigureCodecContext();
+};
+} // namespace ffmpegcpp

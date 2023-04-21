@@ -3,14 +3,13 @@
 namespace ffmpegcpp
 {
 
-	H264NVEncCodec::H264NVEncCodec()
-		: VideoCodec("h264_nvenc")
-	{
-
-	}
-
-	void H264NVEncCodec::SetPreset(const char* preset)
-	{
-		SetOption("preset", preset);
-	}
+H264NVEncCodec::H264NVEncCodec()
+: VideoCodec("h264_nvenc")
+{
 }
+
+void H264NVEncCodec::SetPreset(const char* preset)
+{
+    SetOption("preset", preset);
+}
+} // namespace ffmpegcpp

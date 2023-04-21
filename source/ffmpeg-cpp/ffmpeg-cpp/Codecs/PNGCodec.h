@@ -4,15 +4,14 @@
 namespace ffmpegcpp
 {
 
-	class PNGCodec : public VideoCodec
-	{
+class PNGCodec : public VideoCodec
+{
 
-	public:
+public:
+    PNGCodec();
 
-		PNGCodec();
-
-		void SetCompressionLevel(int compressionLevel);
-	};
+    void SetCompressionLevel(int compressionLevel);
+};
 
 
-}
+} // namespace ffmpegcpp

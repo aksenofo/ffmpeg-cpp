@@ -6,26 +6,24 @@
 namespace ffmpegcpp
 {
 
-	class VideoCodec : public Codec
-	{
-	public:
+class VideoCodec : public Codec
+{
+public:
+    VideoCodec(const char* codecName);
+    VideoCodec(AVCodecID codecId);
+    virtual ~VideoCodec();
 
-		VideoCodec(const char* codecName);
-		VideoCodec(AVCodecID codecId);
-		virtual ~VideoCodec();
+    OpenCodec* Open(int width, int height, AVRational* frameRate, AVPixelFormat format);
 
-		OpenCodec* Open(int width, int height, AVRational* frameRate, AVPixelFormat format);
+    // This maps to the qscale parameter so should be in the range [0,31].
+    void SetQualityScale(int qscale);
 
-		// This maps to the qscale parameter so should be in the range [0,31].
-		void SetQualityScale(int qscale);
+    bool IsPixelFormatSupported(AVPixelFormat format);
+    bool IsFrameRateSupported(AVRational* frameRate);
 
-		bool IsPixelFormatSupported(AVPixelFormat format);
-		bool IsFrameRateSupported(AVRational* frameRate);
-
-		AVPixelFormat GetDefaultPixelFormat();
-		AVRational GetClosestSupportedFrameRate(AVRational frameRate);
-
-	};
+    AVPixelFormat GetDefaultPixelFormat();
+    AVRational GetClosestSupportedFrameRate(AVRational frameRate);
+};
 
 
-}
+} // namespace ffmpegcpp

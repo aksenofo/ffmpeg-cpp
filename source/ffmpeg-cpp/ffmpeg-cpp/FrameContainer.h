@@ -4,21 +4,18 @@
 
 namespace ffmpegcpp
 {
-	class FrameContainer
-	{
-	public:
+class FrameContainer
+{
+public:
+    FrameContainer(AVFrame* frame, AVRational* timeBase);
+    ~FrameContainer();
 
-		FrameContainer(AVFrame* frame, AVRational* timeBase);
-		~FrameContainer();
+    AVFrame* GetFrame();
+    AVRational* GetTimeBase();
 
-		AVFrame* GetFrame();
-		AVRational* GetTimeBase();
+private:
+    AVFrame* frame;
+    AVRational* timeBase;
+};
 
-	private:
-
-		AVFrame* frame;
-		AVRational *timeBase;
-	};
-
-}
-
+} // namespace ffmpegcpp

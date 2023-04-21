@@ -4,17 +4,16 @@
 
 namespace ffmpegcpp
 {
-	class CodecDeducer
-	{
-	public:
+class CodecDeducer
+{
+public:
+    static AVCodec* DeduceEncoderFromFilename(const char* fileName);
 
-		static AVCodec* DeduceEncoderFromFilename(const char* fileName);
+    static AVCodec* DeduceEncoder(AVCodecID codecId);
+    static AVCodec* DeduceEncoder(const char* codecName);
 
-		static AVCodec* DeduceEncoder(AVCodecID codecId);
-		static AVCodec* DeduceEncoder(const char* codecName);
+    static AVCodec* DeduceDecoder(AVCodecID codecId);
+    static AVCodec* DeduceDecoder(const char* codecName);
+};
 
-		static AVCodec* DeduceDecoder(AVCodecID codecId);
-		static AVCodec* DeduceDecoder(const char* codecName);
-	};
-
-}
+} // namespace ffmpegcpp

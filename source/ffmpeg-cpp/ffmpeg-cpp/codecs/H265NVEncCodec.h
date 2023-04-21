@@ -4,15 +4,14 @@
 namespace ffmpegcpp
 {
 
-	class H265NVEncCodec : public VideoCodec
-	{
+class H265NVEncCodec : public VideoCodec
+{
 
-	public:
+public:
+    H265NVEncCodec();
 
-		H265NVEncCodec();
-
-		void SetPreset(const char* preset);
-	};
+    void SetPreset(const char* preset);
+};
 
 
-}
+} // namespace ffmpegcpp
