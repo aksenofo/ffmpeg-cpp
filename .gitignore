@@ -32,3 +32,4 @@
 /source/ffmpeg-cpp/simple_interface/Debug
 
 build
+.cache
