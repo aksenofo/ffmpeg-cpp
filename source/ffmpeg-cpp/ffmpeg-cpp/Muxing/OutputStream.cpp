@@ -39,8 +39,8 @@ namespace ffmpegcpp
 
 	void OutputStream::DrainPacketQueue()
 	{
-		if (packetQueue.size() > 0) printf("Drain %d packets from the packet queue...", packetQueue.size());
-		for (int i = 0; i < packetQueue.size(); ++i)
+		if (packetQueue.size() > 0) printf("Drain %ld packets from the packet queue...", packetQueue.size());
+		for (size_t i = 0; i < packetQueue.size(); ++i)
 		{
 			AVPacket* tmp_pkt = packetQueue[i];
 

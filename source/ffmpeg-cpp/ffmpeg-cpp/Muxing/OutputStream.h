@@ -12,6 +12,8 @@ namespace ffmpegcpp
 
 		OutputStream(Muxer* muxer, Codec* codec);
 
+		virtual ~OutputStream() = default;
+
 		virtual void OpenStream(AVStream* stream, int containerFlags) = 0;
 
 		virtual void WritePacket(AVPacket* pkt, OpenCodec* openCodec) = 0;

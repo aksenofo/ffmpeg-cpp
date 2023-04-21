@@ -14,7 +14,7 @@ namespace ffmpegcpp
 	public:
 
 		InputStream(AVFormatContext* format, AVStream* stream);
-		~InputStream();
+		virtual ~InputStream();
 
 		void Open(FrameSink* frameSink);
 

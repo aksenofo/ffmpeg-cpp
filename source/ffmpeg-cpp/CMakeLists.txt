@@ -9,29 +9,31 @@ project(ffmpeg-cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#FIXIT: temp using 
-include_directories(/home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/include)
+set (FFMPEG_ROOT /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist)
+
+include_directories(${FFMPEG_ROOT}/include)
 
 add_subdirectory(ffmpeg-cpp)
 
 include_directories(ffmpeg-cpp)
 
 set(ffmpeglib 
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavcodec.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavfilter.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavutil.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libswscale.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavdevice.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavformat.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libswresample.a
+    ${FFMPEG_ROOT}/lib/libavcodec.a
+    ${FFMPEG_ROOT}/lib/libavfilter.a
+    ${FFMPEG_ROOT}/lib/libavutil.a
+    ${FFMPEG_ROOT}/lib/libswscale.a
+    ${FFMPEG_ROOT}/lib/libavdevice.a
+    ${FFMPEG_ROOT}/lib/libavformat.a
+    ${FFMPEG_ROOT}/lib/libswresample.a
 
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavcodec.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavfilter.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavutil.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libswscale.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavdevice.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libavformat.a
-    /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist/lib/libswresample.a
+    ${FFMPEG_ROOT}/lib/libavcodec.a
+    ${FFMPEG_ROOT}/lib/libavfilter.a
+    ${FFMPEG_ROOT}/lib/libavutil.a
+    ${FFMPEG_ROOT}/lib/libswscale.a
+    ${FFMPEG_ROOT}/lib/libavdevice.a
+    ${FFMPEG_ROOT}/lib/libavformat.a
+    ${FFMPEG_ROOT}/lib/libswresample.a
+
 )
 
 function (build_proj name)
