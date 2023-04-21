@@ -17,6 +17,6 @@ file(GLOB all_files
      "codecs/*.cpp"
 )
 
-add_library(decomp_storage
+add_library(ffmpegcpp
     ${all_files}
 )
