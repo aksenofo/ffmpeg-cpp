@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Codecs/VideoCodec.h"
-#include "Frame_Sinks/VideoFrameSink.h"
+#include "Frame Sinks/VideoFrameSink.h"
 #include "Muxing/Muxer.h"
 #include "OneInputFrameSink.h"
 #include "VideoFormatConverter.h"
