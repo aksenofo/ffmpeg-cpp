@@ -10,7 +10,7 @@ file(GLOB all_files
      "*.cpp"
      "Codecs/*.cpp"
      "Demuxing/*.cpp"
-     "Frame Sinks/*.cpp"
+     "Frame_Sinks/*.cpp"
      "Info/*.cpp"
      "Muxing/*.cpp"
      "Sources/*.cpp"

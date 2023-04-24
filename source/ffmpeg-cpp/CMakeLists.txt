@@ -9,7 +9,7 @@ project(ffmpeg-cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set (FFMPEG_ROOT /home/aksenofo/PROJECT/mnt/FFMPEG/bld/dist)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include_directories(${FFMPEG_ROOT}/include)
 

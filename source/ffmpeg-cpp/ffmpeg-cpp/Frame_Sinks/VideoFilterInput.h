@@ -26,7 +26,7 @@ public:
 
 
 private:
-    AVFifoBuffer* frame_queue;
+//    AVFifoBuffer* frame_queue;
     StreamData* metaData;
 
     bool frameReceived = false;

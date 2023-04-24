@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Frame Sinks/FrameSink.h"
+#include "Frame_Sinks/FrameSink.h"
 #include "InputSource.h"
 #include "ffmpeg.h"
 
