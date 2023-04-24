@@ -9,13 +9,10 @@ project(ffmpeg-cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set (FFMPEG_ROOT /home/aksenofo/PROJECT/mnt/FFMPEG/bld1/dist)
-
 include_directories(${FFMPEG_ROOT}/include)
 
-add_subdirectory(ffmpeg-cpp)
-
 include_directories(ffmpeg-cpp)
+add_subdirectory(ffmpeg-cpp)
 
 set(ffmpeglib 
     ${FFMPEG_ROOT}/lib/libavcodec.a
