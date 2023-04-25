@@ -9,6 +9,8 @@ project(ffmpeg-cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include_directories(${FFMPEG_ROOT}/include)
 
 include_directories(ffmpeg-cpp)
