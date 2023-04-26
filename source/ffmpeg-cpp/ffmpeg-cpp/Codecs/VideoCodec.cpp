@@ -32,7 +32,7 @@ bool VideoCodec::IsPixelFormatSupported(AVPixelFormat format)
     if (format == AV_PIX_FMT_NONE)
         return true; // let the codec deal with this
     const enum AVPixelFormat* p = codecContext->codec->pix_fmts;
-    while (*p != AV_PIX_FMT_NONE) {
+    while (p && *p != AV_PIX_FMT_NONE) {
         if (*p == format)
             return true;
         p++;
@@ -87,7 +87,7 @@ OpenCodec* VideoCodec::Open(int width, int height, AVRational* frameRate, AVPixe
 AVPixelFormat VideoCodec::GetDefaultPixelFormat()
 {
     const enum AVPixelFormat* p = codecContext->codec->pix_fmts;
-    if (*p == AV_PIX_FMT_NONE)
+    if (p == nullptr || *p == AV_PIX_FMT_NONE)
         throw FFmpegException("Codec " + string(codecContext->codec->name) + " does not have a default pixel format, you have to specify one");
     return *p;
 }
