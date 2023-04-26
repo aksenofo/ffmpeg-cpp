@@ -24,6 +24,30 @@ AVCodec* CodecDeducer::DeduceEncoder(AVCodecID codecId)
     return codec;
 }
 
+
+std::vector<const AVCodec*> CodecDeducer::DeduceEncoderList(const AVMediaType& type)
+{
+    return GatherList(type, av_codec_is_encoder);
+}
+
+std::vector<const AVCodec*> CodecDeducer::DeduceDecoderList(const AVMediaType& type)
+{
+    return GatherList(type, av_codec_is_decoder);
+}
+
+std::vector<const AVCodec*> CodecDeducer::GatherList(const AVMediaType& type, std::function<bool(const AVCodec* c)> is)
+{
+    std::vector<const AVCodec*> en;
+    void *i = 0;
+    const AVCodec* c = nullptr;
+    while ((c = av_codec_iterate(&i))) {
+        if (is(c) && (type == NoTypeFilter || type == c->type))
+            en.push_back(c);
+    }
+    return en;
+}
+
+
 AVCodec* CodecDeducer::DeduceDecoder(const char* codecName)
 {
     AVCodec* codec = avcodec_find_decoder_by_name(codecName);
