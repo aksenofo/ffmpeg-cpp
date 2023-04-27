@@ -10,13 +10,15 @@
 namespace ffmpegcpp
 {
 
-VideoOverlay::VideoOverlay(FrameSink* frameSink)
+VideoOverlay::VideoOverlay(FrameSink* frameSink, VideoOverlayAdapter* videoOverlayAdapter)
 : frameSink(frameSink)
+, videoOverlayAdapter(videoOverlayAdapter)
 {
     sinkStream = frameSink->CreateStream();
 }
 
 FrameSinkStream* VideoOverlay::CreateStream()
+
 {
     stream = new FrameSinkStream(this, 0);
     return stream;
@@ -35,17 +37,11 @@ void VideoOverlay::Close(int streamIndex)
 
 void VideoOverlay::WriteFrame(int streamIndex, AVFrame* frame, StreamData* metaData)
 {
-    /**/
-    uint8_t* buff = (uint8_t*)frame->data[0];
-    if (buff) {
-        for (size_t y = 0; y < 100; y++) {
-            for (size_t x = 0; x < 100; x++) {
-                buff[y * frame->width + x] = 0xff;
-            }
-        }
-    }
 
-    sinkStream->WriteFrame(frame, metaData);
+    AVFrame* newFrame = videoOverlayAdapter->DoOverlay(frame);
+
+    sinkStream->WriteFrame(newFrame, metaData);
+    av_frame_unref(newFrame);
 }
 
 } // namespace ffmpegcpp

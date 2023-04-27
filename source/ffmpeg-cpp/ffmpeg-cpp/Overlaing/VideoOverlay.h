@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Frame_Sinks/VideoFrameSink.h>
+#include <Overlaing/VideoOverlayAdapter.h>
 
 namespace ffmpegcpp
 {
@@ -15,7 +16,7 @@ namespace ffmpegcpp
 class VideoOverlay final : public VideoFrameSink, public FrameWriter
 {
 public:
-    VideoOverlay(FrameSink* frameSink);
+    VideoOverlay(FrameSink* frameSink, VideoOverlayAdapter* videoOverlayAdapter);
 
     FrameSinkStream* CreateStream() override;
 
@@ -29,6 +30,7 @@ private:
     FrameSinkStream* stream;
     FrameSink* frameSink;
     FrameSinkStream* sinkStream;
+    VideoOverlayAdapter* videoOverlayAdapter;
 };
 
 } // namespace ffmpegcpp
