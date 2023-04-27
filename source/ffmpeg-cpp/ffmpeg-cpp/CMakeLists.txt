@@ -15,6 +15,7 @@ file(GLOB all_files
      "Muxing/*.cpp"
      "Sources/*.cpp"
      "codecs/*.cpp"
+     "Overlaing/*.cpp"
 )
 
 add_library(ffmpegcpp
