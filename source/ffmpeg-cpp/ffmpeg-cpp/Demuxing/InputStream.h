@@ -25,6 +25,8 @@ public:
 
     virtual void AddStreamInfo(ContainerInfo* info) = 0;
 
+    virtual AVMediaType GetMediaType () const = 0;
+
 protected:
     AVCodecContext* codecContext = nullptr;
 

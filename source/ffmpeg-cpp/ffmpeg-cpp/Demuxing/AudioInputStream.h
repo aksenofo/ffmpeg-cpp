@@ -15,6 +15,10 @@ public:
 
     void AddStreamInfo(ContainerInfo* info);
 
+    AVMediaType GetMediaType() const {
+        return AVMEDIA_TYPE_AUDIO;
+    }
+
 protected:
     virtual void ConfigureCodecContext();
 };

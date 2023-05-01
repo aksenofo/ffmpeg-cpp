@@ -3,6 +3,7 @@
 #include "CodecDeducer.h"
 #include "FFmpegException.h"
 
+#include <stdexcept>
 #include <string>
 
 using namespace std;
@@ -88,7 +89,10 @@ void Demuxer::DecodeBestVideoStream(FrameSink* frameSink)
 {
     int ret = av_find_best_stream(containerContext, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
     if (ret < 0) {
-        throw FFmpegException("Could not find " + string(av_get_media_type_string(AVMEDIA_TYPE_VIDEO)) + " stream in input file " + fileName, ret);
+        throw FFmpegException("Could not find " +
+                string(av_get_media_type_string(AVMEDIA_TYPE_VIDEO)) +
+                " stream in input file " + fileName,
+            ret);
     }
     int streamIndex = ret;
     return DecodeVideoStream(streamIndex, frameSink);
@@ -96,13 +100,20 @@ void Demuxer::DecodeBestVideoStream(FrameSink* frameSink)
 
 void Demuxer::DecodeAudioStream(int streamIndex, FrameSink* frameSink)
 {
+    throwVerifyStreamIdx(streamIndex);
+
     // each input stream can only be used once
     if (inputStreams[streamIndex] != nullptr) {
-        throw FFmpegException("That stream is already tied to a frame sink, you cannot process the same stream multiple times");
+        throw FFmpegException("That stream is already tied to a frame sink, "
+                              "you cannot process the same stream multiple times");
     }
 
     // create the stream
     InputStream* inputStream = GetInputStream(streamIndex);
+    if (inputStream->GetMediaType() != AVMEDIA_TYPE_AUDIO) {
+        throw std::runtime_error("Invalid input type of stream.");
+    }
+
     inputStream->Open(frameSink);
 
     // remember and return
@@ -111,13 +122,22 @@ void Demuxer::DecodeAudioStream(int streamIndex, FrameSink* frameSink)
 
 void Demuxer::DecodeVideoStream(int streamIndex, FrameSink* frameSink)
 {
+    throwVerifyStreamIdx(streamIndex);
+
     // each input stream can only be used once
     if (inputStreams[streamIndex] != nullptr) {
-        throw FFmpegException("That stream is already tied to a frame sink, you cannot process the same stream multiple times");
+        throw FFmpegException("That stream is already tied to a frame sink, you cannot process "
+                              "the same stream multiple times");
     }
 
     // create the stream
     InputStream* inputStream = GetInputStream(streamIndex);
+    if (!inputStream) {
+        throw std::runtime_error("Cannot create stream");
+    }
+    if (inputStream->GetMediaType() != AVMEDIA_TYPE_VIDEO) {
+        throw std::runtime_error("Invalid input type of stream");
+    }
     inputStream->Open(frameSink);
 
     // remember and return
@@ -126,6 +146,8 @@ void Demuxer::DecodeVideoStream(int streamIndex, FrameSink* frameSink)
 
 InputStream* Demuxer::GetInputStream(int streamIndex)
 {
+    throwVerifyStreamIdx(streamIndex);
+
     // already exists
     if (inputStreams[streamIndex] != nullptr)
         return inputStreams[streamIndex];
@@ -146,6 +168,8 @@ InputStream* Demuxer::GetInputStream(int streamIndex)
     case AVMEDIA_TYPE_AUDIO:
         inputStreams[streamIndex] = new AudioInputStream(containerContext, stream);
         break;
+    default:
+        return nullptr; // Unknown Media Type
     }
 
     // return the created stream
@@ -154,6 +178,8 @@ InputStream* Demuxer::GetInputStream(int streamIndex)
 
 InputStream* Demuxer::GetInputStreamById(int streamId)
 {
+    throwVerifyStreamIdx(streamId);
+
     // map the stream id to an index by going over all the streams and comparing the id
     for (int i = 0; i < containerContext->nb_streams; ++i) {
         AVStream* stream = containerContext->streams[i];
@@ -284,4 +310,11 @@ const char* Demuxer::GetFileName()
 {
     return fileName;
 }
+
+void Demuxer::throwVerifyStreamIdx(int index) const
+{
+    if (index >= containerContext->nb_streams)
+        throw runtime_error("Stream index is to big.");
+}
+
 } // namespace ffmpegcpp

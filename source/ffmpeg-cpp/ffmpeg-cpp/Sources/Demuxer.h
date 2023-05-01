@@ -51,5 +51,6 @@ private:
     void DecodePacket();
 
     void CleanUp();
+    void throwVerifyStreamIdx(int index) const;
 };
 } // namespace ffmpegcpp

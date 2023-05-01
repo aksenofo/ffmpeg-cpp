@@ -19,5 +19,5 @@
 #include "codecs/H264NVEncCodec.h"
 #include "codecs/H265NVEncCodec.h"
 #include "Overlaing/VideoOverlay.h"
-
+#include "CodecDeducer.h"
 #include "ffmpeg.h"
